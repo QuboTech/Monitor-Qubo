@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: qubotech-monitor
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python main.py
+    envVars:
+      - key: ML_REFRESH_TOKEN
+        sync: false
+      - key: ML_CLIENT_ID
+        sync: false
+      - key: ML_CLIENT_SECRET
+        sync: false
+      - key: ML_SELLER_ID
+        sync: false
+      - key: TWILIO_SID
+        sync: false
+      - key: TWILIO_AUTH_TOKEN
+        sync: false
+      - key: WHATSAPP_TO
+        sync: false
+      - key: ADMIN_TOKEN
+        sync: false
+      - key: DB_PATH
+        value: /data/qubotech.db
+      - key: TOKEN_FILE
+        value: /data/tokens.json
+    disk:
+      name: dados
+      mountPath: /data
+      sizeGB: 1

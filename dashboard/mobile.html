@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QUBOTECH · Mobile</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="mobile">
+  <div class="mobile-layout">
+    <header class="mobile-header">
+      <span class="logo">QUBOTECH</span>
+      <button class="btn-refresh" onclick="carregarDados()" title="Atualizar">&#8635;</button>
+    </header>
+
+    <p id="mob-ultima-coleta" class="mob-coleta-info">Carregando...</p>
+
+    <!-- KPIs em cards menores -->
+    <div class="mob-kpi-grid">
+      <div class="mob-kpi">
+        <div class="mob-kpi-label">Receita Hoje</div>
+        <div class="mob-kpi-value" id="mob-receita">R$ —</div>
+      </div>
+      <div class="mob-kpi">
+        <div class="mob-kpi-label">Unidades</div>
+        <div class="mob-kpi-value" id="mob-unidades">—</div>
+      </div>
+      <div class="mob-kpi">
+        <div class="mob-kpi-label">Visitas 30d</div>
+        <div class="mob-kpi-value" id="mob-visitas">—</div>
+      </div>
+      <div class="mob-kpi">
+        <div class="mob-kpi-label">Margem Média</div>
+        <div class="mob-kpi-value" id="mob-margem">—</div>
+      </div>
+    </div>
+
+    <!-- Alertas (destaque) -->
+    <section class="mob-section" id="mob-alertas-section">
+      <h3 class="mob-section-title">Alertas</h3>
+      <ul class="lista-alertas" id="mob-lista-alertas">
+        <li class="alerta-vazio">Sem alertas ativos</li>
+      </ul>
+    </section>
+
+    <!-- Meus anúncios em cards -->
+    <section class="mob-section">
+      <h3 class="mob-section-title">Meus Anúncios</h3>
+      <div id="mob-proprios"></div>
+    </section>
+
+    <!-- Vendas recentes -->
+    <section class="mob-section">
+      <h3 class="mob-section-title">Vendas Recentes</h3>
+      <ul class="lista-pedidos" id="mob-pedidos"></ul>
+    </section>
+
+    <footer class="footer" style="text-align:center; padding: 1rem;">
+      <a href="/">Versão Desktop</a>
+    </footer>
+  </div>
+
+  <script>
+    // Mobile-specific rendering
+    async function carregarDados() {
+      try {
+        const res = await fetch('/api/dados');
+        const d   = await res.json();
+
+        // Última coleta
+        document.getElementById('mob-ultima-coleta').textContent =
+          d.ultima_coleta ? `Atualizado: ${formatarData(d.ultima_coleta)}` : 'Nunca coletado';
+
+        // KPIs
+        const vhoje = d.vendas_hoje || {};
+        document.getElementById('mob-receita').textContent   = formatarBRL(vhoje.receita || 0);
+        document.getElementById('mob-unidades').textContent  = vhoje.unidades || 0;
+
+        const totalVisitas = (d.proprios || []).reduce((s, p) => s + (p.visitas_30d || 0), 0);
+        document.getElementById('mob-visitas').textContent = totalVisitas;
+
+        const margens = calcularMargens(d.proprios || []);
+        const margMedia = margens.length ? margens.reduce((a,b)=>a+b,0)/margens.length : 0;
+        document.getElementById('mob-margem').textContent = formatarBRL(margMedia);
+
+        // Alertas
+        const listaAlertas = document.getElementById('mob-lista-alertas');
+        const alertasAtivos = (d.alertas || []).filter(a => !a.enviado);
+        if (alertasAtivos.length) {
+          listaAlertas.innerHTML = alertasAtivos.map(a =>
+            `<li class="alerta-item alerta-${a.tipo.toLowerCase()}">${a.mensagem}</li>`
+          ).join('');
+        } else {
+          listaAlertas.innerHTML = '<li class="alerta-vazio">Sem alertas ativos</li>';
+        }
+
+        // Anúncios em cards
+        const mobProprios = document.getElementById('mob-proprios');
+        mobProprios.innerHTML = (d.proprios || []).map(p => {
+          const margem = calcularMargem(p.preco || 0);
+          const statusClass = p.status === 'active' ? 'status-ativo' : 'status-inativo';
+          return `
+            <div class="mob-anuncio-card">
+              <div class="mob-anuncio-titulo">${p.titulo || p.item_id}</div>
+              <div class="mob-anuncio-grid">
+                <div><span class="mob-label">Preço</span><strong>${formatarBRL(p.preco)}</strong></div>
+                <div><span class="mob-label">Estoque</span><strong>${p.estoque_total ?? '—'}</strong></div>
+                <div><span class="mob-label">Visitas</span><strong>${p.visitas_30d ?? '—'}</strong></div>
+                <div><span class="mob-label">Margem</span><strong class="${margem < 0 ? 'neg' : 'pos'}">${formatarBRL(margem)}</strong></div>
+              </div>
+              <span class="badge ${statusClass}">${p.status}</span>
+            </div>
+          `;
+        }).join('');
+
+        // Pedidos recentes
+        const mobPedidos = document.getElementById('mob-pedidos');
+        mobPedidos.innerHTML = (d.pedidos_recentes || []).slice(0, 5).map(p =>
+          `<li class="pedido-item">
+            <span class="pedido-data">${formatarData(p.date_created)}</span>
+            <span>${p.item_id}</span>
+            <strong>${formatarBRL(p.total_amount)}</strong>
+          </li>`
+        ).join('') || '<li>Sem pedidos recentes</li>';
+
+      } catch(e) {
+        console.error('Erro ao carregar dados:', e);
+      }
+    }
+
+    function formatarBRL(v) {
+      if (v == null || isNaN(v)) return 'R$ —';
+      return 'R$ ' + Number(v).toFixed(2).replace('.', ',');
+    }
+    function formatarData(dt) {
+      if (!dt) return '—';
+      return new Date(dt).toLocaleString('pt-BR', {dateStyle:'short', timeStyle:'short'});
+    }
+    function calcularMargem(preco) {
+      return preco * (1 - 0.115) - 4.30 - 0.50 - 4.255;
+    }
+    function calcularMargens(proprios) {
+      return proprios.filter(p=>p.preco).map(p=>calcularMargem(p.preco));
+    }
+
+    carregarDados();
+    setInterval(carregarDados, 5 * 60 * 1000); // refresh a cada 5min
+  </script>
+</body>
+</html>

@@ -1,0 +1,4 @@
+requests==2.31.0
+flask==3.0.3
+schedule==1.2.1
+twilio==8.10.0

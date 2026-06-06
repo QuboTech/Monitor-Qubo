@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QUBOTECH Monitor</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="layout">
+    <!-- HEADER -->
+    <header class="header">
+      <div class="header-left">
+        <span class="logo">QUBOTECH</span>
+        <span class="header-sub">Monitor de Vendas</span>
+      </div>
+      <div class="header-right">
+        <span id="ultima-coleta" class="coleta-info">Carregando...</span>
+        <button class="btn-refresh" onclick="carregarDados()" title="Atualizar">&#8635;</button>
+      </div>
+    </header>
+
+    <!-- KPI CARDS -->
+    <section class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-label">Receita Hoje</div>
+        <div class="kpi-value" id="kpi-receita">R$ —</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Unidades Hoje</div>
+        <div class="kpi-value" id="kpi-unidades">—</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Visitas (30d)</div>
+        <div class="kpi-value" id="kpi-visitas">—</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Margem Média</div>
+        <div class="kpi-value" id="kpi-margem">—</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Alertas Ativos</div>
+        <div class="kpi-value" id="kpi-alertas" style="color:var(--warn)">—</div>
+      </div>
+    </section>
+
+    <!-- HISTÓRICO MENSAL -->
+    <section class="section">
+      <h2 class="section-title">Histórico Mensal</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Mês</th>
+              <th>Receita</th>
+              <th>Unidades</th>
+              <th>Pedidos</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-historico"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- MEUS ANÚNCIOS -->
+    <section class="section">
+      <h2 class="section-title">Meus Anúncios</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Anúncio</th>
+              <th>Preço</th>
+              <th>Visitas 30d</th>
+              <th>Vendas Total</th>
+              <th>Estoque</th>
+              <th>Margem</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-proprios"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- CONCORRENTES -->
+    <section class="section">
+      <h2 class="section-title">Concorrentes — Top Busca</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Vendedor</th>
+              <th>Título</th>
+              <th>Preço</th>
+              <th>Vendas</th>
+              <th>Nota</th>
+              <th>Frete</th>
+              <th>Busca</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-concorrentes"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- PARTE INFERIOR: PEDIDOS + ALERTAS -->
+    <div class="bottom-grid">
+      <section class="section">
+        <h2 class="section-title">Vendas Recentes</h2>
+        <ul class="lista-pedidos" id="lista-pedidos"></ul>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">Alertas Ativos</h2>
+        <ul class="lista-alertas" id="lista-alertas"></ul>
+      </section>
+    </div>
+
+    <footer class="footer">
+      QUBOTECH Monitor · Seller <strong>2916573234</strong> · Dados via Mercado Livre API
+      · <a href="/mobile">Versão Mobile</a>
+    </footer>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

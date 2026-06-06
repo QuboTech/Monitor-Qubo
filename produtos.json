@@ -1,0 +1,74 @@
+{
+  "produtos": [
+    {
+      "item_id": "MLB4524638561",
+      "nome": "Manguito UV50+ Principal",
+      "preco_custo": 4.255,
+      "preco_venda_alvo": 25.99,
+      "estoque_alerta_minimo": 10,
+      "ativo": true
+    },
+    {
+      "item_id": "MLB6444161780",
+      "nome": "Manguito UV50+ Premium",
+      "preco_custo": 4.255,
+      "preco_venda_alvo": 29.99,
+      "estoque_alerta_minimo": 10,
+      "ativo": true
+    },
+    {
+      "item_id": "MLB6428436522",
+      "nome": "Manguito UV50+ v2",
+      "preco_custo": 4.255,
+      "preco_venda_alvo": 25.99,
+      "estoque_alerta_minimo": 5,
+      "ativo": true
+    },
+    {
+      "item_id": "MLB6428459762",
+      "nome": "Manguito UV50+ v3",
+      "preco_custo": 4.255,
+      "preco_venda_alvo": 25.99,
+      "estoque_alerta_minimo": 5,
+      "ativo": true
+    },
+    {
+      "item_id": "MLB4516319813",
+      "nome": "Manguito UV50+ v4",
+      "preco_custo": 4.255,
+      "preco_venda_alvo": 25.99,
+      "estoque_alerta_minimo": 5,
+      "ativo": true
+    },
+    {
+      "item_id": "MLB6428466380",
+      "nome": "Manguito UV50+ v5",
+      "preco_custo": 4.255,
+      "preco_venda_alvo": 25.99,
+      "estoque_alerta_minimo": 5,
+      "ativo": true
+    },
+    {
+      "item_id": "MLB4524692461",
+      "nome": "Manguito UV50+ v6",
+      "preco_custo": 4.255,
+      "preco_venda_alvo": 25.99,
+      "estoque_alerta_minimo": 5,
+      "ativo": true
+    },
+    {
+      "item_id": "MLB4524667361",
+      "nome": "Manguito UV50+ v7",
+      "preco_custo": 4.255,
+      "preco_venda_alvo": 25.99,
+      "estoque_alerta_minimo": 5,
+      "ativo": true
+    }
+  ],
+  "custos_fixos": {
+    "comissao_classico_pct": 0.115,
+    "envio_flex_liquido": 4.30,
+    "custo_embalagem": 0.50,
+    "taxa_ml_fixo": 0.0
+  }
+}

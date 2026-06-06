@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+venv/
+.venv/
+env/
+
+# Banco local e tokens (nunca comitar)
+qubotech.db
+tokens.json
+
+# Render / deploy
+*.log
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Claude Code
+.claude/
+
+# Briefing (contém credenciais — manter só local)
+QUBOTECH_MONITOR_BUILD.md
