@@ -98,11 +98,15 @@ def get_item(item_id: str) -> dict:
 
 
 def get_visitas(item_id: str) -> int:
-    ending = datetime.now().strftime("%Y-%m-%d")
+    # Tenta time_window sem o parâmetro ending (ML API retorna 500 com ending=hoje)
     data = _get(f"/items/{item_id}/visits/time_window", {
-        "last": 30, "unit": "day", "ending": ending
+        "last": 30, "unit": "day"
     })
-    return data.get("total_visits", 0)
+    if data.get("total_visits") is not None:
+        return data["total_visits"]
+    # Fallback: endpoint simples de visitas
+    data2 = _get(f"/items/{item_id}/visits")
+    return data2.get("total_visits", 0)
 
 
 def get_reviews(item_id: str) -> tuple[int, float]:
